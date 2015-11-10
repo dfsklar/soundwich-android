@@ -1,7 +1,9 @@
 package com.sklard.lab.soundwich;
 
+import android.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
@@ -18,8 +20,11 @@ import butterknife.OnTouch;
 public class MainActivity extends AppCompatActivity {
 
 
-    @Bind(R.id.soundbite)
+    @Bind(R.id.root)
+    RelativeLayout root;
+
     RelativeLayout draggableImageView;
+
     int activePointerId;
     float lastX, lastY;
 
@@ -28,8 +33,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         ButterKnife.bind(this);
 
+        draggableImageView = new SoundBiteView(this, null);
+        root.addView(draggableImageView);
 
         draggableImageView.setOnTouchListener(new View.OnTouchListener() {
 
@@ -50,8 +58,7 @@ public class MainActivity extends AppCompatActivity {
                                                               break;
                                                           }
 
-                                                          case MotionEvent.ACTION_MOVE:
-                                                          {
+                                                          case MotionEvent.ACTION_MOVE: {
                                                               // Where the user's finger is during the drag
                                                               final int pointerIndex = event.findPointerIndex(activePointerId);
                                                               final float x = event.getX(pointerIndex);
