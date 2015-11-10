@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -17,8 +18,8 @@ import butterknife.OnTouch;
 public class MainActivity extends AppCompatActivity {
 
 
-    @Bind(R.id.imageView)
-    ImageView draggableImageView;
+    @Bind(R.id.soundbite)
+    RelativeLayout draggableImageView;
     int activePointerId;
     float lastX, lastY;
 
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
                                                               if (draggableImageView.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
                                                                   ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) draggableImageView.getLayoutParams();
                                                                   p.leftMargin += dx;
-                                                                  p.topMargin += dy;
+                                                                  // p.topMargin += dy;
                                                                   draggableImageView.setLayoutParams(p);
                                                               }
 
