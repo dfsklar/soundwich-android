@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -18,6 +19,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Bind(R.id.imageView)
     ImageView draggableImageView;
+    int activePointerId;
+    float lastX, lastY;
 
 
     @Override
@@ -25,30 +28,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
-        if (3 == 5) {
-            draggableImageView.setOnDragListener(new View.OnDragListener() {
-
-                                                     @Override
-                                                     public boolean onDrag(View v, DragEvent event) {
-                                                         // Defines a variable to store the action type for the incoming event
-                                                         final int action = event.getAction();
-
-                                                         // Handles each of the expected events
-                                                         switch (action) {
-                                                             case DragEvent.ACTION_DRAG_STARTED:
-                                                                 return true;
-                                                             case DragEvent.ACTION_DRAG_LOCATION:
-                                                                 Log.i("DRAG", "Location");
-                                                                 return true;
-                                                             case DragEvent.ACTION_DROP:
-                                                                 return true;
-                                                         }
-                                                         return true;
-                                                     }
-                                                 }
-            );
-        }
 
 
         draggableImageView.setOnTouchListener(new View.OnTouchListener() {
@@ -59,13 +38,41 @@ public class MainActivity extends AppCompatActivity {
                                                       final int action = event.getAction();
 
                                                       // Handles each of the expected events
-                                                      switch (action) {
-                                                          case MotionEvent.ACTION_DOWN:
-                                                              return true;
+                                                      switch (action & MotionEvent.ACTION_MASK) {
+
+                                                          case MotionEvent.ACTION_DOWN: {
+                                                              final float x = event.getX();
+                                                              final float y = event.getY();
+                                                              lastX = x;
+                                                              lastY = y;
+                                                              activePointerId = event.getPointerId(0);
+                                                              break;
+                                                          }
+
                                                           case MotionEvent.ACTION_MOVE:
-                                                              Log.i("DRAG", "Move");
-                                                              return true;
+                                                          {
+                                                              // Where the user's finger is during the drag
+                                                              final int pointerIndex = event.findPointerIndex(activePointerId);
+                                                              final float x = event.getX(pointerIndex);
+                                                              final float y = event.getY(pointerIndex);
+
+                                                              // Calculate change in x and change in y
+                                                              final float dx = x - lastX;
+                                                              final float dy = y - lastY;
+
+                                                              // Update the margins to move the view
+                                                              if (draggableImageView.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+                                                                  ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) draggableImageView.getLayoutParams();
+                                                                  p.leftMargin += dx;
+                                                                  p.topMargin += dy;
+                                                                  draggableImageView.setLayoutParams(p);
+                                                              }
+
+                                                              draggableImageView.invalidate();
+                                                              break;
+                                                          }
                                                           case MotionEvent.ACTION_UP:
+
                                                               return true;
                                                       }
                                                       return true;
