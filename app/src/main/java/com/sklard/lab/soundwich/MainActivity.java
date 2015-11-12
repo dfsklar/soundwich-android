@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import butterknife.Bind;
@@ -23,7 +24,10 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.root)
     RelativeLayout root;
 
-    RelativeLayout draggableImageView;
+    @Bind(R.id.holderOfSoundtracks)
+    LinearLayout holderOfTracks;
+
+    RelativeLayout draggableImageView, soundtrack;
 
     int activePointerId;
     float lastX, lastY;
@@ -36,8 +40,13 @@ public class MainActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        root.addView(new SoundTrackView(this, null));
+
+
+        /*
         draggableImageView = new SoundBiteView(this, null);
         root.addView(draggableImageView);
+
 
         draggableImageView.setOnTouchListener(new View.OnTouchListener() {
 
@@ -87,6 +96,6 @@ public class MainActivity extends AppCompatActivity {
                                                   }
                                               }
         );
-
+*/
     }
 }
